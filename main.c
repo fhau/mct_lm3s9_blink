@@ -6,19 +6,31 @@
                 loops
 	 Business:    HSA Elektrotechnik
 	 Compiler:    MDK-ARM
-	 Author/Date: Franz Haunstetter / 03.09.13
+	 Author/Date: Franz Haunstetter / 05.09.13
 	 Comment:     new
+	 Author/Date: Franz Haunstetter / 05.09.13
+	 Comment:     System Tick Timemr for led clock
+	              in a loop
    *********************************************
 */
 
 /* includes */
-#include <lm3s9d96.h>
+#include <lm3s9d96.h>		// hardware register names
 
+#define BIT(n)		(1 << n)
 
 
 int main()
 {
 	volatile unsigned long ulLoop;
+	
+	//
+	// Initialize the System Tick Timer for ... ms, then
+	// clear the counting element, and
+	// run the timer at once
+	//
+	NVIC_ST_CURRENT_R = NVIC_ST_RELOAD_R = 10;	// <16: 435 kHz at O0, 670 kHz at O3
+	NVIC_ST_CTRL_R |= BIT(0);
 
 	//
 	// Enable the GPIO port that is used for the on-board LED.
@@ -34,8 +46,8 @@ int main()
 	// Enable the GPIO pin for the LED (PF3).  Set the direction as output, and
 	// enable the GPIO pin for digital function.
 	//
-	GPIO_PORTF_DIR_R = 0x08;
-	GPIO_PORTF_DEN_R = 0x08;
+	GPIO_PORTF_DIR_R = BIT(3);
+	GPIO_PORTF_DEN_R = BIT(3);
 
 	//
 	// Run the action in a superloop.
@@ -43,15 +55,9 @@ int main()
 	while(1)
 	{
 		//
-		// Toggle the LED.
+		// Toggle the LED each time the counter reaches 0.
 		//
-		GPIO_PORTF_DATA_R ^= 0x08;
-
-		//
-		// Delay for a bit.
-		//
-		for(ulLoop = 0; ulLoop < 200000; ulLoop++)
-		{
-		}
+		if (NVIC_ST_CTRL_R & BIT(16))
+			GPIO_PORTF_DATA_R ^= BIT(3);
 	}
 }
