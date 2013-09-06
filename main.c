@@ -11,15 +11,19 @@
 	 Author/Date: Franz Haunstetter / 05.09.13
 	 Comment:     System Tick Timemr for led clock
 	              in a loop
+	 Author/Date: Franz Haunstetter / 06.09.13
+	 Comment:     System Tick Timemr for led clock
+	              by interrupt service
    *********************************************
 */
 
 /* includes */
 #include <lm3s9d96.h>		// hardware register names
 
+/* private macros */
 #define BIT(n)		(1 << n)
 
-
+/* private function prototypes */
 void SysTickISR()
 {
 		//
