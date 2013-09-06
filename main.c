@@ -20,17 +20,24 @@
 #define BIT(n)		(1 << n)
 
 
+void SysTickISR()
+{
+		//
+		// Toggle the LED each time the counter reaches 0.
+		//
+		GPIO_PORTF_DATA_R ^= BIT(3);
+}
+
+
 int main()
 {
 	volatile unsigned long ulLoop;
 	
 	//
 	// Initialize the System Tick Timer for ... ms, then
-	// clear the counting element, and
-	// run the timer at once
+	// clear the counting element
 	//
-	NVIC_ST_CURRENT_R = NVIC_ST_RELOAD_R = 10;	// <16: 435 kHz at O0, 670 kHz at O3
-	NVIC_ST_CTRL_R |= BIT(0);
+	NVIC_ST_CURRENT_R = NVIC_ST_RELOAD_R = 8700000;	// <16: 435 kHz at O0, 670 kHz at O3
 
 	//
 	// Enable the GPIO port that is used for the on-board LED.
@@ -45,19 +52,16 @@ int main()
 	//
 	// Enable the GPIO pin for the LED (PF3).  Set the direction as output, and
 	// enable the GPIO pin for digital function.
+	// Run the timer at once with interrupts.
 	//
 	GPIO_PORTF_DIR_R = BIT(3);
 	GPIO_PORTF_DEN_R = BIT(3);
+	NVIC_ST_CTRL_R |= BIT(0) | BIT(1);
 
 	//
 	// Run the action in a superloop.
 	//
 	while(1)
 	{
-		//
-		// Toggle the LED each time the counter reaches 0.
-		//
-		if (NVIC_ST_CTRL_R & BIT(16))
-			GPIO_PORTF_DATA_R ^= BIT(3);
 	}
 }
