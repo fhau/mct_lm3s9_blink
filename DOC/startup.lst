@@ -446,126 +446,129 @@ ARM Macro Assembler    Page 7
   251 0000026C         ; .bss section.
   252 0000026C         ;
   253 0000026C                 IMPORT           __main
-  254 0000026C         
-  255 0000026C                 IF               {CPU} = "Cortex-M4.fp"
-  260                          ENDIF
-  261 0000026C         
-  262 0000026C F7FF BFFE       B                __main
-  263 00000270         
-  264 00000270         ;*******************************************************
+  254 0000026C                 IMPORT           SetClockXTAL
+  255 0000026C         
+  256 0000026C                 IF               {CPU} = "Cortex-M4.fp"
+  261                          ENDIF
+  262 0000026C         
+  263 0000026C F7FF FFFE       BL               SetClockXTAL ; #fhau: change cl
+                                                            ock to external
 
 
 
 ARM Macro Assembler    Page 8 
 
 
+  264 00000270 F7FF BFFE       B                __main
+  265 00000274         
+  266 00000274         ;*******************************************************
                        ***********************
-  265 00000270         ;
-  266 00000270         ; This is the code that gets called when the processor r
+  267 00000274         ;
+  268 00000274         ; This is the code that gets called when the processor r
                        eceives a NMI.  This
-  267 00000270         ; simply enters an infinite loop, preserving the system 
+  269 00000274         ; simply enters an infinite loop, preserving the system 
                        state for examination
-  268 00000270         ; by a debugger.
-  269 00000270         ;
-  270 00000270         ;*******************************************************
+  270 00000274         ; by a debugger.
+  271 00000274         ;
+  272 00000274         ;*******************************************************
                        ***********************
-  271 00000270         NmiSR
-  272 00000270 E7FE            B                NmiSR
-  273 00000272         
-  274 00000272         ;*******************************************************
+  273 00000274         NmiSR
+  274 00000274 E7FE            B                NmiSR
+  275 00000276         
+  276 00000276         ;*******************************************************
                        ***********************
-  275 00000272         ;
-  276 00000272         ; This is the code that gets called when the processor r
+  277 00000276         ;
+  278 00000276         ; This is the code that gets called when the processor r
                        eceives a fault
-  277 00000272         ; interrupt.  This simply enters an infinite loop, prese
+  279 00000276         ; interrupt.  This simply enters an infinite loop, prese
                        rving the system state
-  278 00000272         ; for examination by a debugger.
-  279 00000272         ;
-  280 00000272         ;*******************************************************
+  280 00000276         ; for examination by a debugger.
+  281 00000276         ;
+  282 00000276         ;*******************************************************
                        ***********************
-  281 00000272         FaultISR
-  282 00000272 E7FE            B                FaultISR
-  283 00000274         
-  284 00000274         ;*******************************************************
+  283 00000276         FaultISR
+  284 00000276 E7FE            B                FaultISR
+  285 00000278         
+  286 00000278         ;*******************************************************
                        ***********************
-  285 00000274         ;
-  286 00000274         ; This is the code that gets called when the processor r
+  287 00000278         ;
+  288 00000278         ; This is the code that gets called when the processor r
                        eceives an unexpected
-  287 00000274         ; interrupt.  This simply enters an infinite loop, prese
+  289 00000278         ; interrupt.  This simply enters an infinite loop, prese
                        rving the system state
-  288 00000274         ; for examination by a debugger.
-  289 00000274         ;
-  290 00000274         ;*******************************************************
+  290 00000278         ; for examination by a debugger.
+  291 00000278         ;
+  292 00000278         ;*******************************************************
                        ***********************
-  291 00000274         IntDefaultHandler
-  292 00000274 E7FE            B                IntDefaultHandler
-  293 00000276         
-  294 00000276         ;*******************************************************
+  293 00000278         IntDefaultHandler
+  294 00000278 E7FE            B                IntDefaultHandler
+  295 0000027A         
+  296 0000027A         ;*******************************************************
                        ***********************
-  295 00000276         ;
-  296 00000276         ; Make sure the end of this section is aligned.
-  297 00000276         ;
-  298 00000276         ;*******************************************************
+  297 0000027A         ;
+  298 0000027A         ; Make sure the end of this section is aligned.
+  299 0000027A         ;
+  300 0000027A         ;*******************************************************
                        ***********************
-  299 00000276 00 00           ALIGN
-  300 00000278         
-  301 00000278         ;*******************************************************
+  301 0000027A 00 00           ALIGN
+  302 0000027C         
+  303 0000027C         ;*******************************************************
                        ***********************
-  302 00000278         ;
-  303 00000278         ; Some code in the normal code section for initializing 
+  304 0000027C         ;
+  305 0000027C         ; Some code in the normal code section for initializing 
                        the heap and stack.
-  304 00000278         ;
-  305 00000278         ;*******************************************************
-                       ***********************
-  306 00000278                 AREA             |.text|, CODE, READONLY
+  306 0000027C         ;
 
 
 
 ARM Macro Assembler    Page 9 
 
 
-  307 00000000         
-  308 00000000         ;*******************************************************
+  307 0000027C         ;*******************************************************
                        ***********************
-  309 00000000         ;
-  310 00000000         ; The function expected of the C library startup code fo
+  308 0000027C                 AREA             |.text|, CODE, READONLY
+  309 00000000         
+  310 00000000         ;*******************************************************
+                       ***********************
+  311 00000000         ;
+  312 00000000         ; The function expected of the C library startup code fo
                        r defining the stack
-  311 00000000         ; and heap memory locations.  For the C library version 
+  313 00000000         ; and heap memory locations.  For the C library version 
                        of the startup code,
-  312 00000000         ; provide this function so that the C library initializa
+  314 00000000         ; provide this function so that the C library initializa
                        tion code can find out
-  313 00000000         ; the location of the stack and heap.
-  314 00000000         ;
-  315 00000000         ;*******************************************************
+  315 00000000         ; the location of the stack and heap.
+  316 00000000         ;
+  317 00000000         ;*******************************************************
                        ***********************
-  316 00000000                 IF               :DEF: __MICROLIB
-  321 00000000                 IMPORT           __use_two_region_memory
-  322 00000000                 EXPORT           __user_initial_stackheap
-  323 00000000         __user_initial_stackheap
-  324 00000000 4802            LDR              R0, =HeapMem
-  325 00000002 4903            LDR              R1, =(StackMem + Stack)
-  326 00000004 4A01            LDR              R2, =(HeapMem + Heap)
-  327 00000006 4B03            LDR              R3, =StackMem
-  328 00000008 4770            BX               LR
-  329 0000000A                 ENDIF
-  330 0000000A         
-  331 0000000A         ;*******************************************************
+  318 00000000                 IF               :DEF: __MICROLIB
+  323 00000000                 IMPORT           __use_two_region_memory
+  324 00000000                 EXPORT           __user_initial_stackheap
+  325 00000000         __user_initial_stackheap
+  326 00000000 4802            LDR              R0, =HeapMem
+  327 00000002 4903            LDR              R1, =(StackMem + Stack)
+  328 00000004 4A01            LDR              R2, =(HeapMem + Heap)
+  329 00000006 4B03            LDR              R3, =StackMem
+  330 00000008 4770            BX               LR
+  331 0000000A                 ENDIF
+  332 0000000A         
+  333 0000000A         ;*******************************************************
                        ***********************
-  332 0000000A         ;
-  333 0000000A         ; Make sure the end of this section is aligned.
   334 0000000A         ;
-  335 0000000A         ;*******************************************************
+  335 0000000A         ; Make sure the end of this section is aligned.
+  336 0000000A         ;
+  337 0000000A         ;*******************************************************
                        ***********************
-  336 0000000A 00 00           ALIGN
-  337 0000000C         
-  338 0000000C         ;*******************************************************
+  338 0000000A 00 00           ALIGN
+  339 0000000C         
+  340 0000000C         ;*******************************************************
                        ***********************
-  339 0000000C         ;
-  340 0000000C         ; Tell the assembler that we're done.
   341 0000000C         ;
-  342 0000000C         ;*******************************************************
+  342 0000000C         ; Tell the assembler that we're done.
+  343 0000000C         ;
+  344 0000000C         ;*******************************************************
                        ***********************
-  343 0000000C                 END
+  345 0000000C                 END
               00000000 
               00000100 
               00000000 
@@ -594,8 +597,8 @@ Symbol: StackMem
       At line 46 in file ..\Startup.s
    Uses
       At line 84 in file ..\Startup.s
-      At line 325 in file ..\Startup.s
       At line 327 in file ..\Startup.s
+      At line 329 in file ..\Startup.s
 
 __initial_sp 00000100
 
@@ -626,8 +629,8 @@ Symbol: HeapMem
    Definitions
       At line 57 in file ..\Startup.s
    Uses
-      At line 324 in file ..\Startup.s
       At line 326 in file ..\Startup.s
+      At line 328 in file ..\Startup.s
 
 __heap_base 00000000
 
@@ -652,20 +655,20 @@ Comment: __heap_limit unused
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 Relocatable symbols
 
-FaultISR 00000272
+FaultISR 00000276
 
 Symbol: FaultISR
    Definitions
-      At line 281 in file ..\Startup.s
+      At line 283 in file ..\Startup.s
    Uses
       At line 87 in file ..\Startup.s
-      At line 282 in file ..\Startup.s
+      At line 284 in file ..\Startup.s
 
-IntDefaultHandler 00000274
+IntDefaultHandler 00000278
 
 Symbol: IntDefaultHandler
    Definitions
-      At line 291 in file ..\Startup.s
+      At line 293 in file ..\Startup.s
    Uses
       At line 88 in file ..\Startup.s
       At line 89 in file ..\Startup.s
@@ -799,16 +802,16 @@ Relocatable symbols
       At line 236 in file ..\Startup.s
       At line 237 in file ..\Startup.s
       At line 238 in file ..\Startup.s
-      At line 292 in file ..\Startup.s
+      At line 294 in file ..\Startup.s
 
-NmiSR 00000270
+NmiSR 00000274
 
 Symbol: NmiSR
    Definitions
-      At line 271 in file ..\Startup.s
+      At line 273 in file ..\Startup.s
    Uses
       At line 86 in file ..\Startup.s
-      At line 272 in file ..\Startup.s
+      At line 274 in file ..\Startup.s
 
 RESET 00000000
 
@@ -846,7 +849,7 @@ Relocatable symbols
 
 Symbol: .text
    Definitions
-      At line 306 in file ..\Startup.s
+      At line 308 in file ..\Startup.s
    Uses
       None
 Comment: .text unused
@@ -854,9 +857,9 @@ __user_initial_stackheap 00000000
 
 Symbol: __user_initial_stackheap
    Definitions
-      At line 323 in file ..\Startup.s
+      At line 325 in file ..\Startup.s
    Uses
-      At line 322 in file ..\Startup.s
+      At line 324 in file ..\Startup.s
 Comment: __user_initial_stackheap used once
 2 symbols
 
@@ -872,7 +875,7 @@ Symbol: Heap
       At line 38 in file ..\Startup.s
    Uses
       At line 58 in file ..\Startup.s
-      At line 326 in file ..\Startup.s
+      At line 328 in file ..\Startup.s
 
 Stack 00000100
 
@@ -882,7 +885,7 @@ Symbol: Stack
    Uses
       At line 47 in file ..\Startup.s
       At line 84 in file ..\Startup.s
-      At line 325 in file ..\Startup.s
+      At line 327 in file ..\Startup.s
 
 2 symbols
 
@@ -891,6 +894,14 @@ Symbol: Stack
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 External symbols
 
+SetClockXTAL 00000000
+
+Symbol: SetClockXTAL
+   Definitions
+      At line 254 in file ..\Startup.s
+   Uses
+      At line 263 in file ..\Startup.s
+Comment: SetClockXTAL used once
 SysTickISR 00000000
 
 Symbol: SysTickISR
@@ -905,15 +916,15 @@ Symbol: __main
    Definitions
       At line 253 in file ..\Startup.s
    Uses
-      At line 262 in file ..\Startup.s
+      At line 264 in file ..\Startup.s
 Comment: __main used once
 __use_two_region_memory 00000000
 
 Symbol: __use_two_region_memory
    Definitions
-      At line 321 in file ..\Startup.s
+      At line 323 in file ..\Startup.s
    Uses
       None
 Comment: __use_two_region_memory unused
-3 symbols
-355 symbols in table
+4 symbols
+356 symbols in table

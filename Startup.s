@@ -251,6 +251,7 @@ Reset_Handler
         ; .bss section.
         ;
         IMPORT  __main
+        IMPORT  SetClockXTAL
 
         IF      {CPU} = "Cortex-M4.fp"
         LDR     R0, =0xE000ED88           ; Enable CP10,CP11
@@ -259,6 +260,7 @@ Reset_Handler
         STR     R1,[R0]
         ENDIF
 
+		BL		SetClockXTAL              ; #fhau: change clock to external
         B       __main
 
 ;******************************************************************************

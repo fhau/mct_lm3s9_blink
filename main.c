@@ -41,7 +41,7 @@ int main()
 	// Initialize the System Tick Timer for ... ms, then
 	// clear the counting element
 	//
-	NVIC_ST_CURRENT_R = NVIC_ST_RELOAD_R = 8700000;	// <16: 435 kHz at O0, 670 kHz at O3
+	NVIC_ST_CURRENT_R = NVIC_ST_RELOAD_R = 32;	// <16: 435 kHz at O0, 670 kHz at O3
 
 	//
 	// Enable the GPIO port that is used for the on-board LED.
