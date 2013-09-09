@@ -29,10 +29,14 @@
 /* private function prototypes */
 void SysTickISR()
 {
-		//
-		// Toggle the LED each time the counter reaches 0.
-		//
-		GPIO_PORTF_DATA_R ^= BIT(3);
+	unsigned long ulShadow;
+	//
+	// Toggle the LED each time the counter reaches 0.
+	// To avoid jitter at small division values remove the pending flag.
+	//
+	GPIO_PORTF_DATA_R ^= BIT(3);
+  ulShadow = NVIC_INT_CTRL_R & ~NVIC_INT_CTRL_UNPEND_SV | NVIC_INT_CTRL_PENDSTCLR;
+	NVIC_INT_CTRL_R = ulShadow;
 }
 
 
@@ -44,9 +48,9 @@ int main()
 	// Initialize the System Tick Timer for 333 ms light change, then
 	// clear the counting element
 	//
-//	NVIC_ST_CURRENT_R = NVIC_ST_RELOAD_R = 13333333;
-	NVIC_ST_CURRENT_R = NVIC_ST_RELOAD_R = 15;
-	// @ O3: <20: 500 .. 550 ns, O3/O0 @4: 500/600 ns
+	NVIC_ST_CURRENT_R = NVIC_ST_RELOAD_R = 13333333;
+//	NVIC_ST_CURRENT_R = NVIC_ST_RELOAD_R = 10;
+	// @ O3: <20: 500 .. 550 ns, @ O3/O0 4: 500/600 ns
 
 	//
 	// Enable the GPIO port that is used for the on-board LED.
