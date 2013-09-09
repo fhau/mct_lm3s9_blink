@@ -14,6 +14,9 @@
 	 Author/Date: Franz Haunstetter / 06.09.13
 	 Comment:     System Tick Timemr for led clock
 	              by interrupt service
+	 Author/Date: Franz Haunstetter / 08.09.13
+	 Comment:     System clock set to 80 MHz
+                through external oscillator
    *********************************************
 */
 
@@ -38,10 +41,12 @@ int main()
 	volatile unsigned long ulLoop;
 	
 	//
-	// Initialize the System Tick Timer for ... ms, then
+	// Initialize the System Tick Timer for 333 ms light change, then
 	// clear the counting element
 	//
-	NVIC_ST_CURRENT_R = NVIC_ST_RELOAD_R = 32000;	// <16: 435 kHz at O0, 670 kHz at O3
+//	NVIC_ST_CURRENT_R = NVIC_ST_RELOAD_R = 13333333;
+	NVIC_ST_CURRENT_R = NVIC_ST_RELOAD_R = 15;
+	// @ O3: <20: 500 .. 550 ns, O3/O0 @4: 500/600 ns
 
 	//
 	// Enable the GPIO port that is used for the on-board LED.
